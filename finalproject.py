@@ -7,6 +7,7 @@
     Date:
 """
 import matplotlib.pyplot as plt
+import math
 
 def help_house(csvfile):
     """
@@ -193,61 +194,6 @@ def pres_historical_consistency_def3(d):
 
     return consistency_dict_pres
 
-def plot_consistency_def3(d_house, d_pres):
-    """
-     plots a bar chart showing the consistency of voting for the House and Presidential elections in each state.
-    :param d_house: (dict): Dictionary containing the voting history for the House elections in each state.
-    :param d_pres: (dict): Dictionary containing the voting history for the Presidential elections in each state.
-    :return: None
-
-    """
-
-    # Initialize variables
-    state = []
-    x1 = list(range(0, 50))
-    y1 = []
-    bar_width = 0.35
-
-    # Calculate consistency for House elections
-    for key4 in d_house.keys():
-        state.append(key4[0:2])
-        consistency = 0
-        previous = "None"
-        for i in range(len(d_house[key4])):
-            if d_house[key4][i] == previous:
-                consistency += int((1/24)*100)
-            previous = d_house[key4][i]
-        y1.append(consistency)
-
-    # Calculate positions for Presidential elections bars
-    x2 = [elem + bar_width for elem in x1]
-
-    y2 = []
-    # Calculate consistency for Presidential elections
-    for key4 in d_pres.keys():
-        consistency = 0
-        previous = "None"
-        for i in range(len(d_pres[key4])):
-            if d_pres[key4][i] == previous:
-                consistency += int((1/24)*100)
-            previous = d_pres[key4][i]
-        y2.append(consistency)
-
-    # Plot the bar chart
-    plt.bar(x1, y1, bar_width, label="House Loyalty")
-    plt.bar(x2, y2, bar_width, label="Presidential Loyalty")
-    plt.xticks(x1, tuple(state))
-
-    # Set labels and title
-    plt.xlabel("State Abbreviation")
-    plt.ylabel("Party Consistency Percentage")
-    plt.title("Consistency of State Voting for House and Presidential Elections")
-
-    # Display legend and show the plot
-    plt.legend()
-    plt.show()
-
-
 def help_pres(csvfile):
     """
     reads data from a CSV file and organizes it into a dictionary.
@@ -330,7 +276,6 @@ def who_won_state_pres(election_results):
     # Return the dictionary with the winners for each state
     return state_winners
 
-
 def consistency_def1(house, pres):
     """
     calculates consistency between two dictionaries. The function calculates consistency scores for each key common to
@@ -359,7 +304,11 @@ def consistency_def1(house, pres):
             # Check if the values for the key in both dictionaries match after stripping newline characters
             if house[key] == pres[key].strip("\n"):
                 # Update the consistency score based on a proportional increase
-                consistency[key_suffix] += int((1 / 12) * 100)
+                consistency[key_suffix] += ((1/12)*100)
+
+    # Round the consistency values for each key
+    for key1 in consistency.keys():
+        consistency[key1] = round(consistency[key1])
 
     # Return the final consistency dictionary
     return consistency
@@ -393,7 +342,8 @@ def plot_consistency_def1(d):
     plt.ylabel("Party Consistency Percentage")
     plt.title("Does State Vote the Same Party for House and President in General Elections?")
 
-    # Display the plot
+    # Display and save the plot
+    plt.savefig("consistency_def1.png")
     plt.show()
 
 
@@ -421,8 +371,8 @@ def consistency_def2(house, pres):
     # Initialize a dictionary to store consistency scores
     consistency = {}
 
-    # Iterate over the first 600 elements of the second list
-    for i in range(0, min(600, len(lst2))):
+    # Iterate over the elements of the second list
+    for i in range(0, len(lst2)):
         # Extract the key from the second list and remove the first four characters
         key = lst2[i][0][4:]
 
@@ -433,7 +383,11 @@ def consistency_def2(house, pres):
         # Check if the values in the second list and new_list match
         if lst2[i][1].strip("\n") == new_list[i][1]:
             # If they match, increment the consistency score for the corresponding key
-            consistency[key] += int((1 / 12) * 100)
+            consistency[key] += ((1 / 12) * 100)
+
+    # Round the consistency values for each key
+    for key8 in consistency.keys():
+        consistency[key8] = round(consistency[key8])
 
     return consistency
 
@@ -465,24 +419,184 @@ def plot_consistency_def2(consistency_data):
     plt.ylabel("Party Consistency Percentage")
     plt.title("Party Consistency in Mid-term Elections Compared to Previous Elections")
 
-    # Display the plot
+    # Display and save the plot
+    plt.savefig("consistency_def2.png")
+    plt.show()
+
+
+def consistency_def31(d_house):
+    """
+    Calculate the consistency of values in each key of the given dictionary.
+    :param d_house: (dict): A dictionary where keys are identifiers and values are lists of values.
+    :return: dict: A dictionary where keys are the same as the input, and values represent the consistency of values.
+
+    """
+
+    # Create a new dictionary to store consistency values for each key
+    consistency_house = {}
+
+    # Iterate through each key in the input dictionary
+    for key4 in d_house.keys():
+        # Initialize consistency value for the current key
+        if key4 not in consistency_house:
+            consistency_house[key4] = 0
+
+        # Initialize variables to track consistency
+        consistency = 0
+        previous = "None"
+
+        # Iterate through the list of values for the current key
+        for i in range(len(d_house[key4])):
+            # Check if the current value is the same as the previous one
+            if d_house[key4][i] == previous:
+                # Increment consistency based on a predefined formula
+                consistency += ((1 / 24) * 100)
+
+            # Update the 'previous' variable for the next iteration
+            previous = d_house[key4][i]
+
+        # Update the consistency value for the current key in the new dictionary
+        consistency_house[key4] = consistency
+
+    # Round the consistency values for each key
+    for key1 in consistency_house.keys():
+        consistency_house[key1] = round(consistency_house[key1])
+
+    # Return the dictionary with consistency values for each key
+    return consistency_house
+
+def consistency_def32(d_pres):
+    """
+    Calculates and returns consistency percentages for each key in the input dictionary.
+    The consistency percentage is calculated based on the number of consecutive repeated elements
+    in the input lists for each key.
+    :param d_pres: (dict): A dictionary containing keys as identifiers and values as lists.
+    :return:  dict: A dictionary where keys are identifiers and values are rounded consistency percentages.
+
+    """
+
+    # Create an empty dictionary to store consistency percentages for each key
+    consistency_pres = {}
+
+    # Loop through each key in the input dictionary
+    for key5 in d_pres.keys():
+        # Initialize consistency for the current key to 0
+        if key5 not in consistency_pres:
+            consistency_pres[key5] = 0
+
+        consistency = 0
+        previous = "None"
+
+        # Loop through each element in the list corresponding to the current key
+        for i in range(len(d_pres[key5])):
+            # Check if the current element is the same as the previous one
+            if d_pres[key5][i] == previous:
+                # If yes, increase the consistency by (1 / 12) * 100
+                consistency += ((1 / 12) * 100)
+            previous = d_pres[key5][i]
+
+        # Assign the calculated consistency to the corresponding key in the result dictionary
+        consistency_pres[key5] = consistency
+
+    # Round the consistency percentages to the nearest integer
+    for key1 in consistency_pres.keys():
+        consistency_pres[key1] = round(consistency_pres[key1])
+
+    # Return the final dictionary of consistency percentages
+    return consistency_pres
+
+
+def plot_consistency_def3(d_house, d_pres):
+    """
+     plots a bar chart showing the consistency of voting for the House and Presidential elections in each state.
+    :param d_house: (dict): Dictionary containing the voting history for the House elections in each state.
+    :param d_pres: (dict): Dictionary containing the voting history for the Presidential elections in each state.
+    :return: None
+
+    """
+
+    # Initialize variables
+    state = []
+    x1 = list(range(0, 50))
+    y1 = []
+    bar_width = 0.35
+
+    # Calculate consistency for House elections
+    for key4 in d_house.keys():
+        state.append(key4[0:2])
+        consistency = 0
+        previous = "None"
+        for i in range(len(d_house[key4])):
+            if d_house[key4][i] == previous:
+                consistency += int((1/24)*100)
+            previous = d_house[key4][i]
+        y1.append(consistency)
+
+
+    # Calculate positions for Presidential elections bars
+    x2 = [elem + bar_width for elem in x1]
+
+    y2 = []
+    # Calculate consistency for Presidential elections
+    for key4 in d_pres.keys():
+        consistency = 0
+        previous = "None"
+        for i in range(len(d_pres[key4])):
+            if d_pres[key4][i] == previous:
+                consistency += int((1/12)*100)
+            previous = d_pres[key4][i]
+        y2.append(consistency)
+
+    # Plot the bar chart
+    plt.bar(x1, y1, bar_width, label="House Loyalty")
+    plt.bar(x2, y2, bar_width, label="Presidential Loyalty")
+    plt.xticks(x1, tuple(state))
+
+    # Set labels and title
+    plt.xlabel("State Abbreviation")
+    plt.ylabel("Party Consistency Percentage")
+    plt.title("Consistency of State Voting for House and Presidential Elections")
+
+    # Display legend and show and save the plot
+    plt.legend()
+    plt.savefig("consistency_def3.png")
     plt.show()
 
 
 def main():
+    """
+    Main function to demonstrate the usage of various functions related to election data analysis.
+
+    This function retrieves house and presidential election data, calculates consistency scores,
+    and prints and saves the results.
+
+    :return: None
+    """
+
     # Get house winner data
     house_winner = house_party_winner_by_state_per_year(who_won_district(help_house("files/1976-2022-house.csv")))
 
     # Get presidential winner data
     pres_winner = who_won_state_pres(help_pres("files/1976-2020-president.csv"))
 
-    # Calculate and plot consistency scores
+    # Calculate and plot consistency scores for house and presidential elections
+
+    # Calculate consistency scores for house elections
     house_consistency = house_historical_consistency_def3(house_winner)
+
+    # Calculate consistency scores for presidential elections
     pres_consistency = pres_historical_consistency_def3(pres_winner)
 
-    plot_consistency_def1(consistency_def1(house_winner, pres_winner))
-    plot_consistency_def2(consistency_def2(house_winner, pres_winner))
-    plot_consistency_def3(house_consistency, pres_consistency)
+    # Print overall consistency scores
+    print("Consistency (Definition 1):", consistency_def1(house_winner, pres_winner))
+    print("Consistency (Definition 2):", consistency_def2(house_winner, pres_winner))
+    print("Consistency (Definition 3.1):", consistency_def31(house_consistency))
+    print("Consistency (Definition 3.2):", consistency_def32(pres_consistency))
+
+    # Plot consistency scores
+    plot1 = plot_consistency_def1(consistency_def1(house_winner, pres_winner))
+    plot2 = plot_consistency_def2(consistency_def2(house_winner, pres_winner))
+    plot3 = plot_consistency_def3(house_consistency, pres_consistency)
 
 
 if __name__ == '__main__':
