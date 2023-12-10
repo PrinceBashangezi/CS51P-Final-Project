@@ -359,7 +359,6 @@ def consistency_def2(house, pres):
     # Convert dictionaries to lists of key-value pairs
     lst1 = list(house.items())
     lst2 = list(pres.items())
-
     # Initialize an empty list to store inconsistent elements
     new_list = []
 
@@ -367,10 +366,8 @@ def consistency_def2(house, pres):
     for elm in lst1:
         if elm[0] not in pres.keys():
             new_list.append(elm)
-
     # Initialize a dictionary to store consistency scores
     consistency = {}
-
     # Iterate over the elements of the second list
     for i in range(0, len(lst2)):
         # Extract the key from the second list and remove the first four characters
@@ -417,7 +414,7 @@ def plot_consistency_def2(consistency_data):
     # Set axis labels and chart title
     plt.xlabel("State Abbreviation")
     plt.ylabel("Party Consistency Percentage")
-    plt.title("Party Consistency in Mid-term Elections Compared to Previous Elections")
+    plt.title("Does a State Vote for the Same Party in Mid-term Elections as they did in Previous Presidential Elections")
 
     # Display and save the plot
     plt.savefig("consistency_def2.png")
@@ -426,7 +423,7 @@ def plot_consistency_def2(consistency_data):
 
 def consistency_def31(d_house):
     """
-    Calculate the consistency of values in each key of the given dictionary.
+    calculates the consistency of values in each key of the given dictionary.
     :param d_house: (dict): A dictionary where keys are identifiers and values are lists of values.
     :return: dict: A dictionary where keys are the same as the input, and values represent the consistency of values.
 
@@ -450,7 +447,7 @@ def consistency_def31(d_house):
             # Check if the current value is the same as the previous one
             if d_house[key4][i] == previous:
                 # Increment consistency based on a predefined formula
-                consistency += ((1 / 24) * 100)
+                consistency += ((1 / 23) * 100)
 
             # Update the 'previous' variable for the next iteration
             previous = d_house[key4][i]
@@ -467,7 +464,7 @@ def consistency_def31(d_house):
 
 def consistency_def32(d_pres):
     """
-    Calculates and returns consistency percentages for each key in the input dictionary.
+    calculates and returns consistency percentages for each key in the input dictionary.
     The consistency percentage is calculated based on the number of consecutive repeated elements
     in the input lists for each key.
     :param d_pres: (dict): A dictionary containing keys as identifiers and values as lists.
@@ -492,7 +489,7 @@ def consistency_def32(d_pres):
             # Check if the current element is the same as the previous one
             if d_pres[key5][i] == previous:
                 # If yes, increase the consistency by (1 / 12) * 100
-                consistency += ((1 / 12) * 100)
+                consistency += ((1 / 11) * 100)
             previous = d_pres[key5][i]
 
         # Assign the calculated consistency to the corresponding key in the result dictionary
@@ -528,7 +525,7 @@ def plot_consistency_def3(d_house, d_pres):
         previous = "None"
         for i in range(len(d_house[key4])):
             if d_house[key4][i] == previous:
-                consistency += int((1/24)*100)
+                consistency += int((1/23)*100)
             previous = d_house[key4][i]
         y1.append(consistency)
 
@@ -543,7 +540,7 @@ def plot_consistency_def3(d_house, d_pres):
         previous = "None"
         for i in range(len(d_pres[key4])):
             if d_pres[key4][i] == previous:
-                consistency += int((1/12)*100)
+                consistency += int((1/11)*100)
             previous = d_pres[key4][i]
         y2.append(consistency)
 
@@ -555,7 +552,7 @@ def plot_consistency_def3(d_house, d_pres):
     # Set labels and title
     plt.xlabel("State Abbreviation")
     plt.ylabel("Party Consistency Percentage")
-    plt.title("Consistency of State Voting for House and Presidential Elections")
+    plt.title("Does the State Vote for the Same for House?\n Does the Sate Vote for the Same Party in Presidential Elections?")
 
     # Display legend and show and save the plot
     plt.legend()
