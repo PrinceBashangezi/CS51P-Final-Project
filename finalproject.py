@@ -333,9 +333,11 @@ def plot_consistency_def1(d):
         y.append(d[key])
         state.append(key)
 
+    plt.figure(figsize=(25, 15))
+
     # Plotting the bar chart
     plt.bar(x, y, bar_width)
-    plt.xticks(x, tuple(state))
+    plt.xticks(x, tuple(state), rotation=45)
 
     # Adding labels and title to the plot
     plt.xlabel("State Abbreviation")
@@ -405,11 +407,13 @@ def plot_consistency_def2(consistency_data):
     # Set the bar width
     bar_width = 0.35
 
+    plt.figure(figsize=(25, 15))
+
     # Create a bar chart
     plt.bar(x_values, loyalty_percentages, bar_width)
 
     # Set x-axis ticks and labels
-    plt.xticks(x_values, tuple(state_abbreviations))
+    plt.xticks(x_values, tuple(state_abbreviations), rotation=45)
 
     # Set axis labels and chart title
     plt.xlabel("State Abbreviation")
@@ -544,19 +548,20 @@ def plot_consistency_def3(d_house, d_pres):
             previous = d_pres[key4][i]
         y2.append(consistency)
 
-    # Plot the bar chart
+    # Increase figure size and rotate x-axis labels
+    plt.figure(figsize=(25, 15))
     plt.bar(x1, y1, bar_width, label="House Loyalty")
     plt.bar(x2, y2, bar_width, label="Presidential Loyalty")
-    plt.xticks(x1, tuple(state))
+    plt.xticks(x1, tuple(state), rotation=45)
 
     # Set labels and title
     plt.xlabel("State Abbreviation")
     plt.ylabel("Party Consistency Percentage")
-    plt.title("Does the State Vote for the Same for House?\n Does the Sate Vote for the Same Party in Presidential Elections?")
+    plt.title("Does the State Vote for the Same for House?\nDoes the State Vote for the Same Party in Presidential Elections?")
 
     # Display legend and show and save the plot
     plt.legend()
-    plt.savefig("consistency_def3.png")
+    plt.savefig("consistency_def3.png")  # Adjust DPI as needed
     plt.show()
 
 
