@@ -345,7 +345,7 @@ def plot_consistency_def1(d):
     plt.title("Does State Vote the Same Party for House and President in General Elections?")
 
     # Display and save the plot
-    plt.savefig("consistency_def1.png")
+    plt.savefig("consistency_definition_1.png")
     plt.show()
 
 
@@ -421,7 +421,7 @@ def plot_consistency_def2(consistency_data):
     plt.title("Does a State Vote for the Same Party in Mid-term Elections as they did in Previous Presidential Elections")
 
     # Display and save the plot
-    plt.savefig("consistency_def2.png")
+    plt.savefig("consistency_definition_2.png")
     plt.show()
 
 
@@ -561,7 +561,7 @@ def plot_consistency_def3(d_house, d_pres):
 
     # Display legend and show and save the plot
     plt.legend()
-    plt.savefig("consistency_def3.png")  # Adjust DPI as needed
+    plt.savefig("consistency_definition_3.png")  # Adjust DPI as needed
     plt.show()
 
 
